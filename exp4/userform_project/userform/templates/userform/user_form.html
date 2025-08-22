@@ -1,0 +1,129 @@
+{% extends 'userform/base.html' %}
+
+{% block title %}Add User - User Form App{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="form-container">
+            <h2 class="text-center mb-4 text-primary">User Registration Form</h2>
+            <p class="text-center text-muted mb-4">Please fill in all the required information</p>
+            
+            <form method="post" novalidate>
+                {% csrf_token %}
+                
+                <!-- Name Field -->
+                <div class="mb-3">
+                    <label for="{{ form.name.id_for_label }}" class="form-label">
+                        <strong>Full Name</strong> <span class="text-danger">*</span>
+                    </label>
+                    {{ form.name }}
+                    {% if form.name.errors %}
+                        <div class="error mt-1">
+                            {% for error in form.name.errors %}
+                                <div>{{ error }}</div>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <!-- Email Field -->
+                <div class="mb-3">
+                    <label for="{{ form.email.id_for_label }}" class="form-label">
+                        <strong>Email Address</strong> <span class="text-danger">*</span>
+                    </label>
+                    {{ form.email }}
+                    {% if form.email.errors %}
+                        <div class="error mt-1">
+                            {% for error in form.email.errors %}
+                                <div>{{ error }}</div>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <!-- Phone Field -->
+                <div class="mb-3">
+                    <label for="{{ form.phone.id_for_label }}" class="form-label">
+                        <strong>Phone Number</strong> <span class="text-danger">*</span>
+                    </label>
+                    {{ form.phone }}
+                    <div class="form-text">Enter at least 10 digits (formatting will be applied automatically)</div>
+                    {% if form.phone.errors %}
+                        <div class="error mt-1">
+                            {% for error in form.phone.errors %}
+                                <div>{{ error }}</div>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <!-- Age Field -->
+                <div class="mb-4">
+                    <label for="{{ form.age.id_for_label }}" class="form-label">
+                        <strong>Age</strong> <span class="text-danger">*</span>
+                    </label>
+                    {{ form.age }}
+                    <div class="form-text">Must be between 1 and 120 years</div>
+                    {% if form.age.errors %}
+                        <div class="error mt-1">
+                            {% for error in form.age.errors %}
+                                <div>{{ error }}</div>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <!-- Form-level errors -->
+                {% if form.non_field_errors %}
+                    <div class="alert alert-danger">
+                        {% for error in form.non_field_errors %}
+                            <div>{{ error }}</div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+
+                <!-- Submit Button -->
+                <div class="d-grid">
+                    <button type="submit" class="btn btn-primary btn-lg">
+                        <i class="bi bi-person-plus"></i> Register User
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Recently Added Users -->
+{% if users %}
+<div class="row mt-5">
+    <div class="col-12">
+        <div class="form-container">
+            <h3 class="text-center mb-4 text-secondary">Recently Added Users</h3>
+            <div class="row">
+                {% for user in users|slice:":3" %}
+                <div class="col-md-4 mb-3">
+                    <div class="card user-card h-100">
+                        <div class="card-body">
+                            <h5 class="card-title text-primary">{{ user.name }}</h5>
+                            <p class="card-text">
+                                <small class="text-muted">
+                                    <strong>Email:</strong> {{ user.email }}<br>
+                                    <strong>Phone:</strong> {{ user.phone }}<br>
+                                    <strong>Age:</strong> {{ user.age }} years<br>
+                                    <strong>Added:</strong> {{ user.created_at|date:"M d, Y" }}
+                                </small>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            <div class="text-center mt-3">
+                <a href="{% url 'user_list' %}" class="btn btn-outline-primary">View All Users</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+{% endblock %}

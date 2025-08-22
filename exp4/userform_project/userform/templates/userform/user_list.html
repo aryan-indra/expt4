@@ -1,0 +1,93 @@
+{% extends 'userform/base.html' %}
+
+{% block title %}All Users - User Form App{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <div class="form-container">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2 class="text-primary mb-0">All Registered Users</h2>
+                <a href="{% url 'user_form' %}" class="btn btn-primary">
+                    <i class="bi bi-plus-circle"></i> Add New User
+                </a>
+            </div>
+
+            {% if users %}
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead class="table-primary">
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">Name</th>
+                                <th scope="col">Email</th>
+                                <th scope="col">Phone</th>
+                                <th scope="col">Age</th>
+                                <th scope="col">Date Added</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for user in users %}
+                            <tr>
+                                <th scope="row">{{ forloop.counter }}</th>
+                                <td><strong>{{ user.name }}</strong></td>
+                                <td>{{ user.email }}</td>
+                                <td>{{ user.phone }}</td>
+                                <td>{{ user.age }} years</td>
+                                <td>
+                                    <small class="text-muted">
+                                        {{ user.created_at|date:"M d, Y H:i" }}
+                                    </small>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Statistics Card -->
+                <div class="mt-4">
+                    <div class="card bg-light">
+                        <div class="card-body">
+                            <div class="row text-center">
+                                <div class="col-md-4">
+                                    <h4 class="text-primary">{{ users.count }}</h4>
+                                    <p class="mb-0 text-muted">Total Users</p>
+                                </div>
+                                <div class="col-md-4">
+                                    <h4 class="text-success">
+                                        {{ users|length|add:0|floatformat:0 }}
+                                    </h4>
+                                    <p class="mb-0 text-muted">Active Records</p>
+                                </div>
+                                <div class="col-md-4">
+                                    <h4 class="text-info">
+                                        {% if users %}
+                                            {{ users.first.created_at|date:"M d" }}
+                                        {% else %}
+                                            --
+                                        {% endif %}
+                                    </h4>
+                                    <p class="mb-0 text-muted">Latest Addition</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            {% else %}
+                <div class="text-center py-5">
+                    <div class="mb-4">
+                        <i class="bi bi-people" style="font-size: 4rem; color: #dee2e6;"></i>
+                    </div>
+                    <h4 class="text-muted">No Users Found</h4>
+                    <p class="text-muted">No users have been registered yet. Start by adding the first user!</p>
+                    <a href="{% url 'user_form' %}" class="btn btn-primary btn-lg mt-3">
+                        <i class="bi bi-plus-circle"></i> Add First User
+                    </a>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
